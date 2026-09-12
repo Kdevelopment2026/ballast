@@ -307,6 +307,18 @@ platform :ios do
     UI.success("age rating set")
   end
 
+  desc "Attach the newest processed build to the editable version"
+  lane :attach_build do
+    require "spaceship"
+    authenticate
+    app = Spaceship::ConnectAPI::App.find(APP_BUNDLE_ID) || UI.user_error!("No app record")
+    version = app.get_edit_app_store_version || UI.user_error!("No editable version")
+    builds = Spaceship::ConnectAPI::Build.all(app_id: app.id).select { |b| b.processing_state == "VALID" }
+    build = builds.max_by { |b| b.version.to_i } || UI.user_error!("No processed build yet — try again in a few minutes")
+    version.select_build(build_id: build.id)
+    UI.success("Version #{version.version_string} now uses build #{build.version}")
+  end
+
   desc "Read the listing back from App Store Connect"
   lane :qa do
     require "spaceship"
