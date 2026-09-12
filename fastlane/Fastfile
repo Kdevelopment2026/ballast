@@ -37,6 +37,13 @@ platform :ios do
     )
   end
 
+  desc "List every app record this key can see (bundle id — name)"
+  lane :apps do
+    authenticate
+    require "spaceship"
+    Spaceship::ConnectAPI::App.all.each { |a| UI.message("#{a.bundle_id}  —  #{a.name}  (SKU #{a.sku})") }
+  end
+
   desc "Show whether the app record exists and which builds Connect has"
   lane :status do
     authenticate
