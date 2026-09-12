@@ -1,0 +1,28 @@
+Ballast is a habit tracker for people a streak app has already burned.
+
+Instead of a chain that snaps back to zero the first morning you oversleep, every habit gets one honest number: how consistently you've shown up over the last 30 days. Miss a day and the number dips a little. It never resets. There is nothing to protect and nothing to lose, so there is no reason to quit.
+
+THE NUMBER DIPS, IT DOESN'T BREAK
+• A rolling 30-day consistency percentage per habit
+• A calm ring that fills as you show up — never red, never an alarm
+• A 90-day dot history where gaps are just gaps, not failures
+• Young habits are measured over the days they've existed, not a 30-day window they haven't earned yet
+
+BUILT TO BE QUIET
+• Today view: see your habits, tap to check in, watch the ring move
+• One optional daily reminder per habit, worded gently
+• A short weekly check-in from Friday to Sunday, aimed at the habit that needs it most — no judgement, just noticing
+• Archive habits you're done with; their history stays
+
+YOURS, ON YOUR PHONE
+• No account, no sign-in, no subscription
+• Everything stays on this device — works permanently in airplane mode
+• No analytics, no tracking, no ads
+• Export every check-in as CSV whenever you like
+
+ACCESSIBLE BY DEFAULT
+• Colour is never the only signal — the percentage is always shown as text
+• VoiceOver labels on every habit, ring and history cell
+• Dynamic Type and Reduce Motion respected throughout
+
+Ballast is for showing up most days, not every day. Add something you want to show up for and let the number tell the truth.

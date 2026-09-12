@@ -1,0 +1,24 @@
+NO SIGN IN REQUIRED
+There is no account, no login and no demo credentials. The app has no server component at all.
+
+THE FIRST SCREEN IS INTENTIONALLY EMPTY
+A new install opens on "No habits yet" because the app has nothing to show until you add a habit. To see it populated:
+
+1. Tap "+" (top right) or "Add your first habit".
+2. Type any name, for example Reading, pick an icon, and tap Save.
+3. Back on Today, tap the circle on the left of the row to check in. The ring on the right shows the consistency percentage — 100% on day one, since the habit is one day old.
+4. Tap the row to open the habit: a larger ring, a 90-day history grid, and a menu (top right) with Edit, Archive and Delete.
+
+WHAT TO TRY
+- Settings (gear, top left): appearance, "Weekly notes", "Export check-ins as CSV" (share sheet with a plain-text file), and the privacy statement.
+- Reminders: edit a habit, switch on "Daily reminder" and pick a time. The app asks for notification permission at that moment, not at launch. The reminder is a single local notification scheduled by iOS; nothing is sent anywhere.
+- A weekly check-in banner appears on Today from Friday to Sunday once a habit exists. It opens a short optional note.
+
+IT WORKS OFFLINE
+Please feel free to test in airplane mode. Everything works. There is no networking code in this build.
+
+PRIVACY
+No analytics, no tracking, no advertising, no third-party SDKs of any kind. All data is stored on device with SwiftData. The privacy label is Data Not Collected, which is accurate. PrivacyInfo.xcprivacy declares UserDefaults (CA92.1) for the appearance setting only.
+
+ACCESSIBILITY
+VoiceOver labels on every habit row, ring and history cell; Dynamic Type; Reduce Motion respected; all colour bands meet WCAG AA and are always paired with the percentage as text. The consistency ring is never red by design.

@@ -13,11 +13,18 @@ struct TodayView: View {
 
     @State private var showingAddHabit = false
     @State private var reflectionHabit: Habit?
+    @State private var path = NavigationPath()
 
     private let calendar = Calendar.current
 
+    /// Screens reachable by push from Today, besides a habit's detail.
+    enum Route: Hashable {
+        case settings
+        case weeklyNotes
+    }
+
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             Group {
                 if habits.isEmpty {
                     emptyState
@@ -57,11 +64,15 @@ struct TodayView: View {
             .navigationDestination(for: Habit.self) { habit in
                 HabitDetailView(habit: habit)
             }
+            .navigationDestination(for: Route.self) { route in
+                switch route {
+                case .settings: SettingsView()
+                case .weeklyNotes: ReflectionListView()
+                }
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    NavigationLink {
-                        SettingsView()
-                    } label: {
+                    NavigationLink(value: Route.settings) {
                         Label("Settings", systemImage: "gearshape")
                     }
                 }
@@ -79,8 +90,35 @@ struct TodayView: View {
             .sheet(item: $reflectionHabit) { habit in
                 WeeklyReflectionView(habit: habit)
             }
+            #if DEBUG
+            .onAppear(perform: openScreenFromLaunchArguments)
+            #endif
         }
     }
+
+    #if DEBUG
+    /// `-ballast-open detail|add|reflection|settings|notes` jumps straight to
+    /// a screen so App Store screenshots can be captured from the command line.
+    private func openScreenFromLaunchArguments() {
+        let arguments = CommandLine.arguments
+        guard let index = arguments.firstIndex(of: "-ballast-open"),
+              arguments.indices.contains(index + 1) else { return }
+        let screen = arguments[index + 1]
+        // A push in the same frame as the first layout is sometimes dropped.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { open(screen) }
+    }
+
+    private func open(_ screen: String) {
+        switch screen {
+        case "detail": if let first = habits.first { path.append(first) }
+        case "add": showingAddHabit = true
+        case "reflection": reflectionHabit = ConsistencyCalculator.leastConsistentHabit(among: habits)
+        case "settings": path.append(Route.settings)
+        case "notes": path.append(Route.settings); path.append(Route.weeklyNotes)
+        default: break
+        }
+    }
+    #endif
 
     private var emptyState: some View {
         ContentUnavailableView {

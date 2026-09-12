@@ -44,7 +44,7 @@ struct AddEditHabitView: View {
                         .foregroundStyle(.secondary)
                 }
             }
-            .navigationTitle(habit == nil ? "New Habit" : "Edit Habit")
+            .navigationTitle(habit == nil ? "New habit" : "Edit habit")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
