@@ -1,1 +1,1 @@
-First release.
+Welcome to Ballast. One honest number per habit: it dips a little when you miss a day, and it never resets to zero.

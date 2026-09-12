@@ -2,6 +2,9 @@ import SwiftUI
 import SwiftData
 
 struct TodayView: View {
+    /// Set by onboarding's "Add your first habit"; opens the sheet once.
+    @Binding var addHabitRequested: Bool
+
     @Environment(\.modelContext) private var modelContext
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
@@ -53,6 +56,8 @@ struct TodayView: View {
                                     .tint(.secondary)
                                 }
                             }
+                        } header: {
+                            Text(Date.now.formatted(.dateTime.weekday(.wide).day().month(.wide)))
                         } footer: {
                             Text("Swipe a habit to archive it. Archived habits keep their history and can be brought back from Settings.")
                         }
@@ -89,6 +94,12 @@ struct TodayView: View {
             }
             .sheet(item: $reflectionHabit) { habit in
                 WeeklyReflectionView(habit: habit)
+            }
+            .onChange(of: addHabitRequested, initial: true) { _, requested in
+                guard requested else { return }
+                addHabitRequested = false
+                // Let the onboarding cross-fade land before the sheet rises.
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { showingAddHabit = true }
             }
             #if DEBUG
             .onAppear(perform: openScreenFromLaunchArguments)
@@ -183,12 +194,12 @@ struct TodayView: View {
 
 #if DEBUG
 #Preview("With habits") {
-    TodayView()
+    TodayView(addHabitRequested: .constant(false))
         .modelContainer(DemoData.previewContainer)
 }
 
 #Preview("Empty") {
-    TodayView()
+    TodayView(addHabitRequested: .constant(false))
         .modelContainer(for: [Habit.self, CheckIn.self, Reflection.self], inMemory: true)
 }
 #endif

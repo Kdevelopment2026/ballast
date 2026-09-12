@@ -34,7 +34,7 @@ struct BallastApp: App {
 
     var body: some Scene {
         WindowGroup {
-            TodayView()
+            RootView()
                 .preferredColorScheme(appearance.colorScheme)
         }
         .modelContainer(sharedModelContainer)

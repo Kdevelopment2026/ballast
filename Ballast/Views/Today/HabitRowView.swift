@@ -42,6 +42,7 @@ struct HabitRowView: View {
                 .accessibilityHidden(true) // folded into the row label below
         }
         .padding(.vertical, 4)
+        .sensoryFeedback(.success, trigger: isCheckedToday) { _, nowChecked in nowChecked }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("\(habit.name), \(percent) percent consistent \(window)")
         .accessibilityValue(isCheckedToday ? "Done today" : "Not done today")

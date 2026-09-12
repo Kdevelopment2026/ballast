@@ -1,1 +1,1 @@
-habit,tracker,consistency,routine,daily,calm,mindful,journal,reminder,offline,private,progress
+routine,daily,goal,builder,planner,checklist,journal,mindful,wellness,selfcare,productivity,offline

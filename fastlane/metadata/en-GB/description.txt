@@ -1,28 +1,33 @@
-Ballast is a habit tracker for people a streak app has already burned.
+Ballast is the habit tracker for people a streak app has already burned. One honest number per habit — how consistently you've shown up over the last 30 days. Miss a day and it dips a little. It never resets to zero.
 
-Instead of a chain that snaps back to zero the first morning you oversleep, every habit gets one honest number: how consistently you've shown up over the last 30 days. Miss a day and the number dips a little. It never resets. There is nothing to protect and nothing to lose, so there is no reason to quit.
+No account. No subscription. Nothing leaves your phone.
 
 THE NUMBER DIPS, IT DOESN'T BREAK
-• A rolling 30-day consistency percentage per habit
+Streak counters punish one bad morning by wiping out months of effort — and that's the day most people quit. Ballast measures the thing that actually matters: how often you show up. A rolling 30-day consistency percentage that moves a little every day and never collapses.
+
+• One honest number per habit, always shown as text, never just a colour
 • A calm ring that fills as you show up — never red, never an alarm
-• A 90-day dot history where gaps are just gaps, not failures
-• Young habits are measured over the days they've existed, not a 30-day window they haven't earned yet
+• A 90-day history where gaps are just gaps, not failures
+• Young habits are measured over the days they've existed, so day three isn't "10%"
 
 BUILT TO BE QUIET
-• Today view: see your habits, tap to check in, watch the ring move
+• Today: see your habits, tap to check in, watch the ring move
 • One optional daily reminder per habit, worded gently
 • A short weekly check-in from Friday to Sunday, aimed at the habit that needs it most — no judgement, just noticing
 • Archive habits you're done with; their history stays
 
 YOURS, ON YOUR PHONE
-• No account, no sign-in, no subscription
-• Everything stays on this device — works permanently in airplane mode
-• No analytics, no tracking, no ads
+• No account, no sign-in, no subscription — one price, yours for good
+• Works permanently in airplane mode; there is no server
+• No analytics, no tracking, no ads, no third-party code
 • Export every check-in as CSV whenever you like
 
 ACCESSIBLE BY DEFAULT
-• Colour is never the only signal — the percentage is always shown as text
+• Colour is never the only signal — the percentage is always text
 • VoiceOver labels on every habit, ring and history cell
 • Dynamic Type and Reduce Motion respected throughout
 
-Ballast is for showing up most days, not every day. Add something you want to show up for and let the number tell the truth.
+GOOD FOR
+Daily routines, morning and evening habits, exercise and stretching, reading, meditation and mindfulness, journaling, hydration, sleep, medication, study, practice, self-care — anything you want to do most days, not every day.
+
+Add something small you want to show up for and let the number tell the truth.

@@ -11,6 +11,13 @@ struct SettingsView: View {
 
     private var archivedHabits: [Habit] { habits.filter(\.isArchived) }
 
+    private var versionString: String {
+        let info = Bundle.main.infoDictionary
+        let version = info?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let build = info?["CFBundleVersion"] as? String ?? "1"
+        return "\(version) (\(build))"
+    }
+
     var body: some View {
         Form {
             Section("Appearance") {
@@ -58,10 +65,26 @@ struct SettingsView: View {
                 .disabled(habits.isEmpty)
             }
 
-            Section("About Ballast") {
+            Section {
                 Label("No accounts. No cloud. No subscription.", systemImage: "lock.shield")
                 Label("Everything stays on this device.", systemImage: "iphone")
                 Label("One honest number. The number dips, it doesn't break.", systemImage: "chart.pie")
+            } header: {
+                Text("About Ballast")
+            }
+
+            // Plain links that hand off to Safari — the app itself never makes a request.
+            Section {
+                Link(destination: URL(string: "https://kdevelopment2026.github.io/ballast/privacy.html")!) {
+                    Label("Privacy policy", systemImage: "hand.raised")
+                }
+                Link(destination: URL(string: "https://kdevelopment2026.github.io/ballast/support.html")!) {
+                    Label("Support", systemImage: "questionmark.circle")
+                }
+            } footer: {
+                Text("Ballast \(versionString)")
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, BallastTheme.Spacing.sm)
             }
         }
         .navigationTitle("Settings")

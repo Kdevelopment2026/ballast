@@ -20,3 +20,4 @@ build/
 *.ipa
 *.dSYM.zip
 *.mobileprovision
+Ballast/Resources/Info.plist

@@ -15,20 +15,41 @@ struct AddEditHabitView: View {
         bySettingHour: 20, minute: 0, second: 0, of: .now
     ) ?? .now
 
-    private let emojiChoices = ["🟦", "🏃", "💧", "📖", "🧘", "🥗", "😴", "✍️", "🎯", "🌱", "🧹", "☎️"]
+    private let emojiChoices = ["🟦", "🏃", "💧", "📖", "🧘", "🥗", "😴", "✍️", "🎯", "🌱", "🧹", "☎️", "🎸", "💊", "🚶", "🧠"]
+    private let emojiColumns = Array(repeating: GridItem(.flexible(), spacing: BallastTheme.Spacing.sm), count: 8)
 
     var body: some View {
         NavigationStack {
             Form {
                 Section("What are you showing up for?") {
                     TextField("Habit name", text: $name)
+                        .submitLabel(.done)
+                }
 
-                    Picker("Icon", selection: $emoji) {
+                Section("Icon") {
+                    LazyVGrid(columns: emojiColumns, spacing: BallastTheme.Spacing.sm) {
                         ForEach(emojiChoices, id: \.self) { choice in
-                            Text(choice).tag(choice)
+                            Button {
+                                emoji = choice
+                            } label: {
+                                Text(choice)
+                                    .font(.title2)
+                                    .frame(minWidth: BallastTheme.minimumTapTarget, minHeight: BallastTheme.minimumTapTarget)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .fill(emoji == choice ? BallastTheme.ringColor(for: 1).opacity(0.18) : Color.clear)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .stroke(emoji == choice ? BallastTheme.ringColor(for: 1) : Color.clear, lineWidth: 2)
+                                    )
+                            }
+                            .buttonStyle(.plain)
+                            .accessibilityLabel(choice)
+                            .accessibilityAddTraits(emoji == choice ? [.isSelected] : [])
                         }
                     }
-                    .pickerStyle(.menu)
+                    .padding(.vertical, BallastTheme.Spacing.xs)
                 }
 
                 Section("Gentle reminder") {

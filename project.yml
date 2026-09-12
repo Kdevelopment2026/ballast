@@ -21,7 +21,7 @@ settings:
     DEVELOPMENT_TEAM: SJW465977U
     CODE_SIGN_STYLE: Automatic
     MARKETING_VERSION: "1.0"
-    CURRENT_PROJECT_VERSION: "2"
+    CURRENT_PROJECT_VERSION: "3"
     SWIFT_STRICT_CONCURRENCY: minimal
     ENABLE_USER_SCRIPT_SANDBOXING: YES
     DEAD_CODE_STRIPPING: YES
@@ -32,13 +32,23 @@ targets:
     platform: iOS
     sources:
       - path: Ballast
+    info:
+      path: Ballast/Resources/Info.plist
+      properties:
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        # Static launch screen: same teal and ring as the app icon, so the
+        # SwiftUI splash can pick up from it without a visible cut.
+        UILaunchScreen:
+          UIColorName: LaunchBackground
+          UIImageName: LaunchRing
+          UIImageRespectsSafeAreaInsets: false
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.kayode.ballast
         PRODUCT_NAME: Ballast
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: NO
-        INFOPLIST_KEY_UILaunchScreen_Generation: YES
         INFOPLIST_KEY_CFBundleDisplayName: Ballast
         # No network, no custom crypto — answers the export compliance question up front.
         INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: NO

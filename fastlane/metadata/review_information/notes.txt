@@ -1,8 +1,8 @@
 NO SIGN IN REQUIRED
 There is no account, no login and no demo credentials. The app has no server component at all.
 
-THE FIRST SCREEN IS INTENTIONALLY EMPTY
-A new install opens on "No habits yet" because the app has nothing to show until you add a habit. To see it populated:
+FIRST LAUNCH
+A short splash, then a three-page introduction (skippable). The last page's "Add your first habit" opens the new-habit form directly. After that, Today shows "No habits yet" because the app has nothing to display until a habit exists. To see it populated:
 
 1. Tap "+" (top right) or "Add your first habit".
 2. Type any name, for example Reading, pick an icon, and tap Save.

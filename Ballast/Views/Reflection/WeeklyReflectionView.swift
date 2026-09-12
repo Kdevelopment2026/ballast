@@ -27,6 +27,18 @@ struct WeeklyReflectionView: View {
                 Section("This week") {
                     TextEditor(text: $note)
                         .frame(minHeight: 120)
+                        .overlay(alignment: .topLeading) {
+                            if note.isEmpty {
+                                Text("Optional. A sentence is plenty.")
+                                    .foregroundStyle(.tertiary)
+                                    .padding(.top, 8)
+                                    .padding(.leading, 5)
+                                    .allowsHitTesting(false)
+                                    .accessibilityHidden(true)
+                            }
+                        }
+                        .accessibilityLabel("This week's note")
+                        .accessibilityHint("Optional. A sentence is plenty.")
                 }
             }
             .navigationTitle("Weekly check-in")

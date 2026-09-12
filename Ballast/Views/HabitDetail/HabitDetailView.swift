@@ -10,6 +10,10 @@ struct HabitDetailView: View {
     @State private var showingDeleteConfirmation = false
 
     private var window: String { ConsistencyCalculator.windowDescription(createdAt: habit.createdAt) }
+    private var windowDays: Int { ConsistencyCalculator.windowDays(createdAt: habit.createdAt) }
+    private var doneInWindow: Int {
+        Int((ConsistencyCalculator.consistency(for: habit) * Double(windowDays)).rounded())
+    }
 
     var body: some View {
         ScrollView {
@@ -23,6 +27,9 @@ struct HabitDetailView: View {
                     )
                     Text("Steady \(window)")
                         .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                    Text("\(doneInWindow) of \(windowDays) days")
+                        .font(.footnote.weight(.medium))
                         .foregroundStyle(.secondary)
                     if let reminderTime = habit.reminderTime {
                         Label(
