@@ -85,9 +85,11 @@ private struct ShareSheet: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         SettingsView()
     }
     .modelContainer(DemoData.previewContainer)
 }
+#endif

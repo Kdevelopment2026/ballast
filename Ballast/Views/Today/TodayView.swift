@@ -143,6 +143,7 @@ struct TodayView: View {
     }
 }
 
+#if DEBUG
 #Preview("With habits") {
     TodayView()
         .modelContainer(DemoData.previewContainer)
@@ -152,3 +153,4 @@ struct TodayView: View {
     TodayView()
         .modelContainer(for: [Habit.self, CheckIn.self, Reflection.self], inMemory: true)
 }
+#endif

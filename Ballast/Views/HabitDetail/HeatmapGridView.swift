@@ -44,8 +44,10 @@ struct HeatmapGridView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     HeatmapGridView(habit: DemoData.sampleHabit)
         .padding()
         .modelContainer(DemoData.previewContainer)
 }
+#endif

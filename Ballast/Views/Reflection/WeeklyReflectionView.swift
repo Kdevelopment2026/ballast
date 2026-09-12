@@ -49,7 +49,9 @@ struct WeeklyReflectionView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     WeeklyReflectionView(habit: DemoData.sampleHabit)
         .modelContainer(DemoData.previewContainer)
 }
+#endif

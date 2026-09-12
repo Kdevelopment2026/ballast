@@ -112,6 +112,7 @@ struct AddEditHabitView: View {
     }
 }
 
+#if DEBUG
 #Preview("New habit") {
     AddEditHabitView(habit: nil)
         .modelContainer(DemoData.previewContainer)
@@ -121,3 +122,4 @@ struct AddEditHabitView: View {
     AddEditHabitView(habit: DemoData.sampleHabit)
         .modelContainer(DemoData.previewContainer)
 }
+#endif

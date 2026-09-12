@@ -49,6 +49,7 @@ struct HabitRowView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     List {
         HabitRowView(habit: DemoData.sampleHabit, isCheckedToday: true, onToggle: {})
@@ -56,3 +57,4 @@ struct HabitRowView: View {
     }
     .modelContainer(DemoData.previewContainer)
 }
+#endif

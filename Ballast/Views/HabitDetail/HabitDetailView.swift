@@ -97,9 +97,11 @@ struct HabitDetailView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         HabitDetailView(habit: DemoData.sampleHabit)
     }
     .modelContainer(DemoData.previewContainer)
 }
+#endif

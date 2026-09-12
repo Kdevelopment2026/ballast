@@ -53,9 +53,11 @@ struct ReflectionListView: View {
     }
 }
 
+#if DEBUG
 #Preview {
     NavigationStack {
         ReflectionListView()
     }
     .modelContainer(DemoData.previewContainer)
 }
+#endif
