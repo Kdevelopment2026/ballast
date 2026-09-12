@@ -319,6 +319,57 @@ platform :ios do
     UI.success("Version #{version.version_string} now uses build #{build.version}")
   end
 
+  desc "Make the app available in every territory, including ones Apple adds later"
+  lane :availability do
+    require "spaceship"
+    authenticate
+    app = Spaceship::ConnectAPI::App.find(APP_BUNDLE_ID) || UI.user_error!("No app record")
+    territories = asc(:get, "/v1/territories?limit=200")["data"].map { |t| t["id"] }
+    asc(:post, "/v2/appAvailabilities", {
+      data: { type: "appAvailabilities",
+              attributes: { availableInNewTerritories: true },
+              relationships: {
+                app: { data: { type: "apps", id: app.id } },
+                territoryAvailabilities: { data: territories.map.with_index { |_, i| { type: "territoryAvailabilities", id: "${t#{i}}" } } }
+              } },
+      included: territories.map.with_index { |t, i|
+        { type: "territoryAvailabilities", id: "${t#{i}}", attributes: { available: true },
+          relationships: { territory: { data: { type: "territories", id: t } } } }
+      }
+    })
+    UI.success("available in #{territories.count} territories, including new ones")
+  end
+
+  desc "Read back the app price schedule and territory availability (read-only)"
+  lane :price_check do
+    require "spaceship"
+    authenticate
+    app = Spaceship::ConnectAPI::App.find(APP_BUNDLE_ID) || UI.user_error!("No app record")
+    sched = asc(:get, "/v1/apps/#{app.id}/appPriceSchedule?include=baseTerritory")
+    base = sched.dig("data", "relationships", "baseTerritory", "data", "id")
+    UI.message("base territory: #{base.inspect}")
+    schedule_id = sched.dig("data", "id")
+    manual = asc(:get, "/v1/appPriceSchedules/#{schedule_id}/manualPrices?include=appPricePoint&limit=5")
+    (manual["included"] || []).select { |i| i["type"] == "appPricePoints" }.each do |p|
+      UI.message("manual price: #{p.dig('attributes', 'customerPrice')} (proceeds #{p.dig('attributes', 'proceeds')})")
+    end
+    %w[USA DEU AUS].each do |t|
+      auto = asc(:get, "/v1/appPriceSchedules/#{schedule_id}/automaticPrices?include=appPricePoint&filter[territory]=#{t}&limit=1")
+      (auto["included"] || []).each { |p| UI.message("#{t}: #{p.dig('attributes', 'customerPrice')}") }
+    end
+    avail = begin
+      asc(:get, "/v1/apps/#{app.id}/appAvailabilityV2?include=territoryAvailabilities")
+    rescue StandardError => e
+      UI.important("availability: not set (#{e.message})")
+      nil
+    end
+    if avail
+      rows = (avail["included"] || []).select { |i| i["type"] == "territoryAvailabilities" }
+      UI.message("availableInNewTerritories: #{avail.dig('data', 'attributes', 'availableInNewTerritories').inspect}")
+      UI.message("territories available: #{rows.count { |x| x.dig('attributes', 'available') }} of #{rows.count}")
+    end
+  end
+
   desc "Read the listing back from App Store Connect"
   lane :qa do
     require "spaceship"
