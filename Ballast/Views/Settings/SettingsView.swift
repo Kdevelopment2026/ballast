@@ -3,11 +3,13 @@ import SwiftData
 import UIKit
 
 struct SettingsView: View {
-    @Query private var habits: [Habit]
+    @Query(sort: \Habit.sortOrder) private var habits: [Habit]
 
     @AppStorage("ballast.appearance") private var appearanceRawValue: String = AppearanceOption.system.rawValue
     @State private var showingShareSheet = false
     @State private var exportURL: URL?
+
+    private var archivedHabits: [Habit] { habits.filter(\.isArchived) }
 
     var body: some View {
         Form {
@@ -20,7 +22,33 @@ struct SettingsView: View {
                 .pickerStyle(.segmented)
             }
 
+            if !archivedHabits.isEmpty {
+                Section {
+                    ForEach(archivedHabits) { habit in
+                        HStack {
+                            Text("\(habit.emoji) \(habit.name)")
+                            Spacer()
+                            Button("Bring back") {
+                                habit.isArchived = false
+                                ReminderScheduler.shared.scheduleReminder(for: habit)
+                            }
+                            .buttonStyle(.borderless)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                } header: {
+                    Text("Archived")
+                } footer: {
+                    Text("Archived habits keep their history. Bringing one back picks up where it left off.")
+                }
+            }
+
             Section("Your data") {
+                NavigationLink {
+                    ReflectionListView()
+                } label: {
+                    Label("Weekly notes", systemImage: "leaf")
+                }
                 Button {
                     exportURL = CSVExporter.writeToTemporaryFile(habits: habits)
                     showingShareSheet = exportURL != nil
@@ -33,7 +61,7 @@ struct SettingsView: View {
             Section("About Ballast") {
                 Label("No accounts. No cloud. No subscription.", systemImage: "lock.shield")
                 Label("Everything stays on this device.", systemImage: "iphone")
-                Label("One honest number, not a streak to protect.", systemImage: "chart.pie")
+                Label("One honest number. The number dips, it doesn't break.", systemImage: "chart.pie")
             }
         }
         .navigationTitle("Settings")
@@ -55,4 +83,11 @@ private struct ShareSheet: UIViewControllerRepresentable {
     }
 
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
+}
+
+#Preview {
+    NavigationStack {
+        SettingsView()
+    }
+    .modelContainer(DemoData.previewContainer)
 }

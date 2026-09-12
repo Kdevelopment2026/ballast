@@ -94,4 +94,24 @@ final class ConsistencyCalculatorTests: XCTestCase {
         )
         XCTAssertEqual(result?.name, "Struggling")
     }
+
+    func testDuplicateAndOutOfWindowCheckInsAreIgnored() {
+        let reference = date(daysAgo: 0)
+        let createdAt = date(daysAgo: 29)
+        // Today logged twice, one entry outside the 30-day window, one in the future.
+        let checkIns = [
+            date(daysAgo: 0, from: reference),
+            date(daysAgo: 0, from: reference),
+            date(daysAgo: 40, from: reference),
+            date(daysAgo: -1, from: reference),
+        ]
+
+        let result = ConsistencyCalculator.consistency(
+            checkInDates: checkIns,
+            createdAt: createdAt,
+            asOf: reference,
+            calendar: calendar
+        )
+        XCTAssertEqual(result, 1.0 / 30.0, accuracy: 0.0001)
+    }
 }

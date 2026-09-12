@@ -1,9 +1,12 @@
 import SwiftUI
 
-/// A circular progress ring showing rolling consistency — deliberately not a
-/// streak flame, and never coloured red.
+/// A circular progress ring showing rolling consistency — never coloured red,
+/// and always paired with the percentage as text so colour is never the only
+/// signal.
 struct ConsistencyRing: View {
     let consistency: Double // 0...1
+    /// Copy for the window the number covers — see `ConsistencyCalculator.windowDescription`.
+    var windowDescription: String = "over the last 30 days"
     var lineWidth: CGFloat = 6
     var size: CGFloat = 44
 
@@ -29,7 +32,7 @@ struct ConsistencyRing: View {
         }
         .frame(width: size, height: size)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("\(Int((consistency * 100).rounded())) percent consistency over the last 30 days")
+        .accessibilityLabel("\(Int((consistency * 100).rounded())) percent consistent \(windowDescription)")
     }
 }
 

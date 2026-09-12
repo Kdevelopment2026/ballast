@@ -1,8 +1,9 @@
 import Foundation
 import SwiftData
 
-/// Something the user wants to show up for. Deliberately has no `currentStreak`
-/// or `bestStreak` field — Ballast never computes or displays a streak.
+/// Something the user wants to show up for. Deliberately carries no running
+/// tally of consecutive days — consistency is always computed on read from
+/// `checkIns` via `ConsistencyCalculator`.
 @Model
 final class Habit {
     var id: UUID

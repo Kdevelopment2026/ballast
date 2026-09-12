@@ -3,6 +3,7 @@ import SwiftData
 
 struct TodayView: View {
     @Environment(\.modelContext) private var modelContext
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     @Query(filter: #Predicate<Habit> { !$0.isArchived }, sort: \Habit.sortOrder)
     private var habits: [Habit]
@@ -36,8 +37,17 @@ struct TodayView: View {
                                         onToggle: { toggleToday(habit) }
                                     )
                                 }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                    Button {
+                                        archive(habit)
+                                    } label: {
+                                        Label("Archive", systemImage: "archivebox")
+                                    }
+                                    .tint(.secondary)
+                                }
                             }
-                            .onDelete(perform: archiveHabits)
+                        } footer: {
+                            Text("Swipe a habit to archive it. Archived habits keep their history and can be brought back from Settings.")
                         }
                     }
                     .listStyle(.insetGrouped)
@@ -59,7 +69,7 @@ struct TodayView: View {
                     Button {
                         showingAddHabit = true
                     } label: {
-                        Label("Add Habit", systemImage: "plus")
+                        Label("Add habit", systemImage: "plus")
                     }
                 }
             }
@@ -76,7 +86,7 @@ struct TodayView: View {
         ContentUnavailableView {
             Label("No habits yet", systemImage: "circle.dashed")
         } description: {
-            Text("Add something you want to show up for. Ballast tracks how steady you are — not how long your chain is.")
+            Text("Add something you want to show up for. Ballast tracks how steady you are over the last 30 days — nothing to protect, nothing to lose.")
         } actions: {
             Button("Add your first habit") { showingAddHabit = true }
                 .buttonStyle(.borderedProminent)
@@ -113,18 +123,32 @@ struct TodayView: View {
 
     private func toggleToday(_ habit: Habit) {
         let today = calendar.startOfDay(for: .now)
-        if let existing = habit.checkIns.first(where: { calendar.isDate($0.date, inSameDayAs: today) }) {
-            modelContext.delete(existing)
+        let change = {
+            if let existing = habit.checkIns.first(where: { calendar.isDate($0.date, inSameDayAs: today) }) {
+                modelContext.delete(existing)
+            } else {
+                modelContext.insert(CheckIn(date: today, habit: habit))
+            }
+        }
+        if reduceMotion {
+            change()
         } else {
-            let checkIn = CheckIn(date: today, habit: habit)
-            modelContext.insert(checkIn)
+            withAnimation(.snappy) { change() }
         }
     }
 
-    private func archiveHabits(at offsets: IndexSet) {
-        for index in offsets {
-            habits[index].isArchived = true
-            ReminderScheduler.shared.cancelReminder(for: habits[index])
-        }
+    private func archive(_ habit: Habit) {
+        habit.isArchived = true
+        ReminderScheduler.shared.cancelReminder(for: habit)
     }
+}
+
+#Preview("With habits") {
+    TodayView()
+        .modelContainer(DemoData.previewContainer)
+}
+
+#Preview("Empty") {
+    TodayView()
+        .modelContainer(for: [Habit.self, CheckIn.self, Reflection.self], inMemory: true)
 }

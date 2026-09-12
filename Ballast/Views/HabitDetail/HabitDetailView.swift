@@ -9,18 +9,29 @@ struct HabitDetailView: View {
     @State private var showingEdit = false
     @State private var showingDeleteConfirmation = false
 
+    private var window: String { ConsistencyCalculator.windowDescription(createdAt: habit.createdAt) }
+
     var body: some View {
         ScrollView {
             VStack(spacing: BallastTheme.Spacing.lg) {
                 VStack(spacing: BallastTheme.Spacing.sm) {
                     ConsistencyRing(
                         consistency: ConsistencyCalculator.consistency(for: habit),
+                        windowDescription: window,
                         lineWidth: 10,
                         size: 110
                     )
-                    Text("Rolling 30-day consistency")
+                    Text("Steady \(window)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    if let reminderTime = habit.reminderTime {
+                        Label(
+                            "Reminder at \(reminderTime.formatted(date: .omitted, time: .shortened))",
+                            systemImage: "bell"
+                        )
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                    }
                 }
                 .padding(.top, BallastTheme.Spacing.lg)
 
@@ -32,7 +43,7 @@ struct HabitDetailView: View {
                 .padding(.horizontal)
 
                 VStack(alignment: .leading, spacing: BallastTheme.Spacing.xs) {
-                    Text("No streaks here")
+                    Text("The number dips, it doesn't break")
                         .font(.headline)
                     Text("A missed day dents this number a little. It never resets it to zero. Show up when you can.")
                         .font(.callout)
@@ -45,6 +56,7 @@ struct HabitDetailView: View {
             }
             .padding(.bottom, BallastTheme.Spacing.xl)
         }
+        .background(Color(uiColor: .systemGroupedBackground))
         .navigationTitle("\(habit.emoji) \(habit.name)")
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -53,12 +65,17 @@ struct HabitDetailView: View {
                     Button("Edit", systemImage: "pencil") { showingEdit = true }
                     Button(habit.isArchived ? "Unarchive" : "Archive", systemImage: "archivebox") {
                         habit.isArchived.toggle()
+                        if habit.isArchived {
+                            ReminderScheduler.shared.cancelReminder(for: habit)
+                        } else {
+                            ReminderScheduler.shared.scheduleReminder(for: habit)
+                        }
                     }
                     Button("Delete", systemImage: "trash", role: .destructive) {
                         showingDeleteConfirmation = true
                     }
                 } label: {
-                    Image(systemName: "ellipsis.circle")
+                    Label("More", systemImage: "ellipsis.circle")
                 }
             }
         }
@@ -78,4 +95,11 @@ struct HabitDetailView: View {
             Button("Cancel", role: .cancel) {}
         }
     }
+}
+
+#Preview {
+    NavigationStack {
+        HabitDetailView(habit: DemoData.sampleHabit)
+    }
+    .modelContainer(DemoData.previewContainer)
 }

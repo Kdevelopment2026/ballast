@@ -1,7 +1,8 @@
 import SwiftUI
+import SwiftData
 
-/// A 90-day dot grid. Filled = completed that day. Deliberately no
-/// "streak broken" language or highlighting anywhere — gaps are just gaps.
+/// A 90-day dot grid. Filled = completed that day. Gaps are just gaps —
+/// there is no highlighting of missed days anywhere.
 struct HeatmapGridView: View {
     let habit: Habit
 
@@ -21,6 +22,11 @@ struct HeatmapGridView: View {
         }
     }
 
+    private var completedInWindow: Int {
+        let window = Set(days)
+        return completedDays.filter { window.contains($0) }.count
+    }
+
     var body: some View {
         LazyVGrid(columns: columns, spacing: 4) {
             ForEach(days, id: \.self) { day in
@@ -28,8 +34,18 @@ struct HeatmapGridView: View {
                 RoundedRectangle(cornerRadius: 3)
                     .fill(isDone ? BallastTheme.ringColor(for: 1) : Color.secondary.opacity(0.15))
                     .frame(height: 14)
+                    .accessibilityElement()
+                    .accessibilityLabel(day.formatted(.dateTime.day().month(.wide)))
+                    .accessibilityValue(isDone ? "Done" : "Not done")
             }
         }
-        .accessibilityLabel("Last 90 days: \(completedDays.count) days completed")
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Last 90 days: \(completedInWindow) days done")
     }
+}
+
+#Preview {
+    HeatmapGridView(habit: DemoData.sampleHabit)
+        .padding()
+        .modelContainer(DemoData.previewContainer)
 }

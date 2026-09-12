@@ -4,8 +4,8 @@ import UserNotifications
 /// Owns all local notification scheduling. Views never call
 /// `UNUserNotificationCenter` directly — go through this object.
 ///
-/// Reminders are deliberately gentle: no streak-shaming copy, no "you're about
-/// to lose your streak" urgency. One optional daily nudge per habit, nothing more.
+/// Reminders are deliberately gentle: no shaming copy, no "you're about to
+/// lose it" urgency. One optional daily nudge per habit, nothing more.
 @Observable
 final class ReminderScheduler {
 

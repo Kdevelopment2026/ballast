@@ -39,7 +39,7 @@ struct AddEditHabitView: View {
                 }
 
                 Section {
-                    Text("Ballast never shows a broken streak or a red \"missed it\" state. Miss a day and the number dips a little — that's all.")
+                    Text("Ballast never shows a red \"missed it\" state. Miss a day and the number dips a little — that's all.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
@@ -79,11 +79,24 @@ struct AddEditHabitView: View {
             habit.reminderTime = resolvedReminder
             applyReminder(to: habit, enabled: reminderEnabled)
         } else {
-            let newHabit = Habit(name: trimmedName, emoji: emoji, reminderTime: resolvedReminder)
+            let newHabit = Habit(
+                name: trimmedName,
+                emoji: emoji,
+                reminderTime: resolvedReminder,
+                sortOrder: nextSortOrder()
+            )
             modelContext.insert(newHabit)
             applyReminder(to: newHabit, enabled: reminderEnabled)
         }
         dismiss()
+    }
+
+    /// New habits go to the bottom of the Today list.
+    private func nextSortOrder() -> Int {
+        var descriptor = FetchDescriptor<Habit>(sortBy: [SortDescriptor(\.sortOrder, order: .reverse)])
+        descriptor.fetchLimit = 1
+        let highest = (try? modelContext.fetch(descriptor).first?.sortOrder) ?? -1
+        return highest + 1
     }
 
     private func applyReminder(to habit: Habit, enabled: Bool) {
@@ -97,4 +110,14 @@ struct AddEditHabitView: View {
             ReminderScheduler.shared.cancelReminder(for: habit)
         }
     }
+}
+
+#Preview("New habit") {
+    AddEditHabitView(habit: nil)
+        .modelContainer(DemoData.previewContainer)
+}
+
+#Preview("Edit habit") {
+    AddEditHabitView(habit: DemoData.sampleHabit)
+        .modelContainer(DemoData.previewContainer)
 }
